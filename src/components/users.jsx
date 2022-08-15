@@ -12,12 +12,12 @@ const Users = () => {
   // смена фразы в заголовке
   const renderPhrase = (number) => {
     return number === 4
-      ? "человекa хотят"
+      ? "человекa "
       : number === 3
-      ? "человекa хотят"
+      ? "человекa "
       : number === 2
-      ? "человекa хотят"
-      : "человек хочет";
+      ? "человекa "
+      : "человек ";
   };
 
   // меняем цвет заголовка
@@ -30,7 +30,7 @@ const Users = () => {
   const Heading = () => {
     return (
       <span className={getBadgeClasses()}>
-        {users.length} {renderPhrase(users.length)} тусануть с тобой
+        {users.length} {renderPhrase(users.length)} тусанут с тобой сегодня
       </span>
     );
   };
