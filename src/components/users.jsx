@@ -5,78 +5,74 @@ const Users = () => {
   const [users, setUsers] = useState(API.users.fetchAll());
 
   // функция удаления
-  const handleDelete = (userId) => {
-    setUsers((prevState) => prevState.filter((user) => user !== userId));
-  };
+  const handleDelete = (userId) =>
+    setUsers(users.filter((user) => user._id !== userId));
 
   // смена фразы в заголовке
   const renderPhrase = (number) => {
-    return number === 4
-      ? "человекa "
-      : number === 3
-      ? "человекa "
-      : number === 2
-      ? "человекa "
-      : "человек ";
-  };
-
-  // меняем цвет заголовка
-  const getBadgeClasses = () => {
-    let classes = "badge m-2 ";
-    classes += users.length === 0 ? "bg-success" : "bg-primary";
-    return classes;
-  };
-  // Заголовок
-  const Heading = () => {
-    return (
-      <span className={getBadgeClasses()}>
-        {users.length} {renderPhrase(users.length)} тусанут с тобой сегодня
-      </span>
-    );
+    const lastOne = Number(number.toString().slice(-1));
+    if (number > 4 && number < 15) return "Человек тусанет";
+    if ([2, 3, 4].indexOf(lastOne) >= 0) return "Человека тусанут";
+    if (lastOne === 1) return "Человек тусанет";
+    return "Человек тусанет";
   };
 
   return (
     <>
-      <h2>{Heading()}</h2>
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Имя</th>
-            <th>Качества</th>
-            <th>Профессия</th>
-            <th>Встретился,раз</th>
-            <th>Оценка</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user) => (
-            <>
-              <tr key={user._id}>
-                <td>{user.name}</td>
-                <td>
-                  {user.qualities.map((qualitie) => (
-                    <span className={"badge m-2 bg-" + qualitie.color}>
-                      {qualitie.name}
-                    </span>
-                  ))}
-                </td>
-                <td>{user.profession.name}</td>
-                <td>{user.completedMeetings}</td>
-                <td>{user.rate}</td>
-                <td>
-                  <button
-                    type="button"
-                    className="btn btn-success"
-                    onClick={() => handleDelete(user)}
-                  >
-                    delete
-                  </button>
-                </td>
-              </tr>
-            </>
-          ))}
-        </tbody>
-      </table>
+      <h2>
+        <span
+          className={"badge bg-" + (users.length > 0 ? "primary" : "danger")}
+        >
+          {users.length > 0
+            ? `${users.length} ${renderPhrase(users.length)} с тобой сегодня`
+            : "Никто не тусанет с тобой сегодня"}
+        </span>
+      </h2>
+      {users.length > 0 && (
+        <table className="table">
+          <thead>
+            <tr>
+              <th scope="col">Имя</th>
+              <th scope="col">Качества</th>
+              <th scope="col">Профессия</th>
+              <th scope="col">Встретился,раз</th>
+              <th scope="col">Оценка</th>
+              <th />
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <>
+                <tr key={user._id}>
+                  <td>{user.name}</td>
+                  <td>
+                    {user.qualities.map((qualitie) => (
+                      <span
+                        key={user._id}
+                        className={"badge m-2 bg-" + qualitie.color}
+                      >
+                        {qualitie.name}
+                      </span>
+                    ))}
+                  </td>
+                  <td>{user.profession.name}</td>
+                  <td>{user.completedMeetings}</td>
+                  <td>{user.rate}</td>
+                  <td>
+                    <button
+                      type="button"
+                      className="btn btn-danger"
+                      onClick={() => handleDelete(user._id)}
+                    >
+                      delete
+                    </button>
+                  </td>
+                </tr>
+              </>
+            ))}
+          </tbody>
+        </table>
+      )}
     </>
   );
 };
