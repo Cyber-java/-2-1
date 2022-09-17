@@ -9,7 +9,7 @@ function App() {
   // функция удаления
   const handleDelete = (userId) =>
     setUsers(users.filter((user) => user._id !== userId));
-  // функция избранного
+  // функция избранного bookmark
   const handleToggleBookMark = (id) =>
     setUsers(
       users.map((user) => {
