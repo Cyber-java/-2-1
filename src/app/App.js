@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Users from "./components/users";
-import SeachStatus from "./components/seachStatus";
 import API from "./API";
 
 function App() {
-  const [users, setUsers] = useState(API.users.fetchAll());
+  const [users, setUsers] = useState();
+
+  useEffect(() => {
+    API.users.fetchAll().then((data) => setUsers(data));
+  }, []);
 
   // функция удаления
   const handleDelete = (userId) =>
@@ -20,12 +23,13 @@ function App() {
 
   return (
     <div>
-      <SeachStatus length={users.length} />
-      <Users
-        users={users}
-        onDelete={handleDelete}
-        onToggleBookMark={handleToggleBookMark}
-      />
+      {users && (
+        <Users
+          users={users}
+          onDelete={handleDelete}
+          onToggleBookMark={handleToggleBookMark}
+        />
+      )}
     </div>
   );
 }
