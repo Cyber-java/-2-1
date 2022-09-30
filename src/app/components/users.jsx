@@ -10,6 +10,7 @@ import SearchStatus from "./seachStatus";
 const Users = ({ users: allUsers, ...rest }) => {
   // currentPage - срез пользователей котрых хотим отобразить(или текущая страница) и в useState указываем 1 страницу по умолчанию
   const [currentPage, setCurrentPage] = useState(1);
+  // хук для пользователей
   const [professions, setProfessions] = useState();
   const [selectedProf, setSelectedProf] = useState();
   const pageSize = 2; // кол-во user на странице
@@ -31,14 +32,21 @@ const Users = ({ users: allUsers, ...rest }) => {
   useEffect(() => {
     setCurrentPage(1);
   }, [selectedProf]);
+
   // фильтрация
   const filteredUsers = selectedProf
-    ? allUsers.filter((user) => user.profession === selectedProf)
+    ? allUsers.filter(
+        (user) =>
+          JSON.stringify(user.profession) === JSON.stringify(selectedProf)
+      )
     : allUsers;
   // общее кол-во user
   const count = filteredUsers.length;
   // Вызываем метод Пагинации и передаем параметры, получаем массив из 4-х пользователей
   const userCrop = paginate(filteredUsers, currentPage, pageSize);
+  const r = allUsers.filter((user) => JSON.stringify(user.profession));
+  console.log(r);
+  console.log(JSON.stringify(selectedProf));
   // кнопка очистить
   const clearFilter = () => {
     setSelectedProf();

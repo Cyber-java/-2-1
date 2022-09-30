@@ -7,7 +7,7 @@ function App() {
 
   useEffect(() => {
     API.users.fetchAll().then((data) => setUsers(data));
-  }, []);
+  }, [users]);
 
   // функция удаления
   const handleDelete = (userId) =>

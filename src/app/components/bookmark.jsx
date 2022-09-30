@@ -9,6 +9,6 @@ const Bookmark = ({ status, ...rest }) => {
 };
 
 Bookmark.propTypes = {
-  status: PropTypes.array,
+  status: PropTypes.bool,
 };
 export default Bookmark;
