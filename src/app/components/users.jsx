@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { paginate } from "../utils/paginate";
 import Pagination from "./pagination";
-import User from "./user";
+import UserTable from "./usersTable";
+import _ from "lodash";
 import GroupList from "./groupList";
 import API from "../API";
 import SearchStatus from "./seachStatus";
@@ -13,7 +14,9 @@ const Users = ({ users: allUsers, ...rest }) => {
   // хук для пользователей
   const [professions, setProfessions] = useState();
   const [selectedProf, setSelectedProf] = useState();
-  const pageSize = 2; // кол-во user на странице
+  // хук для сортировки, первым параметром идет итератор по которому будем сортировать,вторым параметром будет направление сортировки
+  const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
+  const pageSize = 8; // кол-во user на странице
   // функция перелистывания страницы по клику
   const handlePageChange = (pageIndex) => {
     setCurrentPage(pageIndex); // обновленное состояние страницы после ее выбора
@@ -33,6 +36,11 @@ const Users = ({ users: allUsers, ...rest }) => {
     setCurrentPage(1);
   }, [selectedProf]);
 
+  // метод сортировки
+  const handleOnSort = (item) => {
+    setSortBy(item);
+  };
+
   // фильтрация
   const filteredUsers = selectedProf
     ? allUsers.filter(
@@ -40,13 +48,14 @@ const Users = ({ users: allUsers, ...rest }) => {
           JSON.stringify(user.profession) === JSON.stringify(selectedProf)
       )
     : allUsers;
+
   // общее кол-во user
   const count = filteredUsers.length;
+  // сортировка, первым параметром передаем отфильтрованных пользователей, вторым параметром указываем по какому
+  // значению будет происходить сортировка и третьим параметром передаем массив направления(по алф-ту или обратно)
+  const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order]);
   // Вызываем метод Пагинации и передаем параметры, получаем массив из 4-х пользователей
-  const userCrop = paginate(filteredUsers, currentPage, pageSize);
-  const r = allUsers.filter((user) => JSON.stringify(user.profession));
-  console.log(r);
-  console.log(JSON.stringify(selectedProf));
+  const userCrop = paginate(sortedUsers, currentPage, pageSize);
   // кнопка очистить
   const clearFilter = () => {
     setSelectedProf();
@@ -68,24 +77,12 @@ const Users = ({ users: allUsers, ...rest }) => {
       <div className="d-flex flex-column">
         <SearchStatus length={count} />
         {count > 0 && (
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">Имя</th>
-                <th scope="col">Качества</th>
-                <th scope="col">Профессия</th>
-                <th scope="col">Встретился,раз</th>
-                <th scope="col">Оценка</th>
-                <th scope="col">Избранное</th>
-                <th />
-              </tr>
-            </thead>
-            <tbody>
-              {userCrop.map((user) => (
-                <User key={user._id} {...user} {...rest} />
-              ))}
-            </tbody>
-          </table>
+          <UserTable
+            users={userCrop}
+            onSort={handleOnSort}
+            selectedSort={sortBy}
+            {...rest}
+          />
         )}
         <div className="d-flex justify-content-center">
           <Pagination // компонет пагинации(разделения на страницы)
