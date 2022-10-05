@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
+import CaretDownFill from "./caretDownFill";
+import CaretUpFill from "./caretUpFill";
 
 const TableHeader = ({ onSort, selectedSort, columns }) => {
+  const [fieldData, setFieldData] = useState("");
   // метод сортировки
   const handleSort = (item) => {
     // добавим условие для сортировки, если итератор равен текущему значению, то обновляем состояние(setSortBy) беря при
@@ -15,6 +18,11 @@ const TableHeader = ({ onSort, selectedSort, columns }) => {
     } else {
       onSort({ path: item, order: "asc" });
     }
+    setFieldData(item);
+  };
+
+  const Arrow = () => {
+    return selectedSort.order === "asc" ? <CaretUpFill /> : <CaretDownFill />;
   };
   return (
     <thead>
@@ -28,18 +36,14 @@ const TableHeader = ({ onSort, selectedSort, columns }) => {
                 : undefined
             }
             // указатель мыши
-            {...{ role: columns[column].path && "button" }}
+            {...{
+              role: columns[column].path && "button",
+            }}
           >
             {columns[column].name}
+            {selectedSort.path === fieldData ? <Arrow /> : null}
           </th>
         ))}
-
-        {/* <th scope="col">Качества</th>
-        <th onClick={() => handleSort("profession.name")}>Профессия</th>
-        <th onClick={() => handleSort("completedMeetings")}>Встретился раз</th>
-        <th onClick={() => handleSort("rate")}>Оценка</th>
-        <th onClick={() => handleSort("bookmark")}>Избранное</th>
-        <th /> */}
       </tr>
     </thead>
   );
