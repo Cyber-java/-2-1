@@ -1,10 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
-import CaretDownFill from "./caretDownFill";
-import CaretUpFill from "./caretUpFill";
 
 const TableHeader = ({ onSort, selectedSort, columns }) => {
-  const [fieldData, setFieldData] = useState("");
   // метод сортировки
   const handleSort = (item) => {
     // добавим условие для сортировки, если итератор равен текущему значению, то обновляем состояние(setSortBy) беря при
@@ -18,11 +15,16 @@ const TableHeader = ({ onSort, selectedSort, columns }) => {
     } else {
       onSort({ path: item, order: "asc" });
     }
-    setFieldData(item);
   };
-
-  const Arrow = () => {
-    return selectedSort.order === "asc" ? <CaretUpFill /> : <CaretDownFill />;
+  const renderSortArrow = (selectedSort, currentPath) => {
+    if (selectedSort.path === currentPath) {
+      if (selectedSort.order === "asc") {
+        return <i className="bi bi-caret-down-fill"></i>;
+      } else {
+        return <i className="bi bi-caret-up-fill"></i>;
+      }
+    }
+    return null;
   };
   return (
     <thead>
@@ -41,7 +43,8 @@ const TableHeader = ({ onSort, selectedSort, columns }) => {
             }}
           >
             {columns[column].name}
-            {selectedSort.path === fieldData ? <Arrow /> : null}
+            {""}
+            {renderSortArrow(selectedSort, columns[column].path)}
           </th>
         ))}
       </tr>
