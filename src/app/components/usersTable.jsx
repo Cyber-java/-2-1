@@ -1,10 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import TableHeader from "./tableHeader";
-import TableBody from "./tableBody";
+// import TableHeader from "./tableHeader";
+// import TableBody from "./tableBody";
 import Bookmark from "./bookmark";
 import QualitiesList from "./qualitiesList";
 import Table from "./table";
+import { Link } from "react-router-dom";
 
 const UserTable = ({
   users,
@@ -16,7 +17,11 @@ const UserTable = ({
 }) => {
   // переменная колонок с данными
   const columns = {
-    name: { path: "name", name: "Имя" }, // имя
+    name: {
+      path: "name",
+      name: "Имя",
+      component: (user) => <Link to={`users/${user._id}`}>{user.name}</Link>,
+    }, // имя
     qualities: {
       // качества
       name: "Качества",
@@ -46,10 +51,12 @@ const UserTable = ({
     },
   };
   return (
-    <Table>
-      <TableHeader {...{ onSort, selectedSort, columns }} />
-      <TableBody {...{ columns, data: users }} />
-    </Table>
+    <Table
+      onSort={onSort}
+      selectedSort={selectedSort}
+      columns={columns}
+      data={users}
+    />
   );
 };
 
