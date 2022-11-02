@@ -7,6 +7,7 @@ import _ from "lodash";
 import GroupList from "./groupList";
 import API from "../API";
 import SearchStatus from "./seachStatus";
+import Search from "./search";
 
 const UsersList = () => {
   // currentPage - срез пользователей котрых хотим отобразить(или текущая страница) и в useState указываем 1 страницу по умолчанию
@@ -93,6 +94,7 @@ const UsersList = () => {
         )}
         <div className="d-flex flex-column">
           <SearchStatus length={count} />
+          <Search />
           {count > 0 && (
             <UserTable
               users={userCrop}
