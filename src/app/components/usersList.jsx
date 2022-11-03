@@ -7,7 +7,7 @@ import _ from "lodash";
 import GroupList from "./groupList";
 import API from "../API";
 import SearchStatus from "./seachStatus";
-import Search from "./search";
+import TextField from "./textField";
 
 const UsersList = () => {
   // currentPage - срез пользователей котрых хотим отобразить(или текущая страница) и в useState указываем 1 страницу по умолчанию
@@ -19,7 +19,7 @@ const UsersList = () => {
   const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
   const pageSize = 8; // кол-во user на странице
   const [users, setUsers] = useState();
-
+  const [valueSearch, setValueSearch] = useState("");
   useEffect(() => {
     API.users.fetchAll().then((data) => setUsers(data));
   }, [users]);
@@ -60,7 +60,11 @@ const UsersList = () => {
   };
   if (users) {
     // фильтрация
-    const filteredUsers = selectedProf
+    const filteredUsers = valueSearch
+      ? users.filter((user) => {
+          return user.name.toLowerCase().includes(valueSearch.toLowerCase());
+        })
+      : selectedProf
       ? users.filter(
           (user) =>
             JSON.stringify(user.profession) === JSON.stringify(selectedProf)
@@ -78,6 +82,9 @@ const UsersList = () => {
     const clearFilter = () => {
       setSelectedProf();
     };
+    const handleSearch = ({ target }) => {
+      setValueSearch(target.value);
+    };
     return (
       <div className="d-flex">
         {professions && (
@@ -94,7 +101,13 @@ const UsersList = () => {
         )}
         <div className="d-flex flex-column">
           <SearchStatus length={count} />
-          <Search />
+          <TextField
+            label="Search..."
+            type="search"
+            name="Search"
+            value={valueSearch}
+            onChange={handleSearch}
+          />
           {count > 0 && (
             <UserTable
               users={userCrop}
