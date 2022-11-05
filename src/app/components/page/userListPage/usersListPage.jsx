@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { paginate } from "../utils/paginate";
-import Pagination from "./pagination";
-import UserTable from "./usersTable";
+import { paginate } from "../../../utils/paginate";
+import Pagination from "../../common/pagination";
+import UserTable from "../../ui/usersTable";
 import _ from "lodash";
-import GroupList from "./groupList";
-import API from "../API";
-import SearchStatus from "./seachStatus";
+import GroupList from "../../common/groupList";
+import API from "../../../API";
+import SearchStatus from "../../ui/seachStatus";
 
-const UsersList = () => {
+const UsersListPage = () => {
   // currentPage - срез пользователей котрых хотим отобразить(или текущая страница) и в useState указываем 1 страницу по умолчанию
   const [currentPage, setCurrentPage] = useState(1);
   // хук для профессий
@@ -134,8 +134,8 @@ const UsersList = () => {
   return "loading";
 };
 
-UsersList.propTypes = {
+UsersListPage.propTypes = {
   users: PropTypes.array,
 };
 
-export default UsersList;
+export default UsersListPage;

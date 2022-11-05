@@ -6,9 +6,8 @@ import TableHeader from "./tableHeader";
 const Table = ({ onSort, selectedSort, columns, data, children }) => {
   return (
     <table className="table">
-      {children || ( // проверка возвращаем детей либо компоненты
+      {children || (
         <>
-          {" "}
           <TableHeader {...{ onSort, selectedSort, columns }} />
           <TableBody {...{ columns, data }} />
         </>
@@ -17,7 +16,7 @@ const Table = ({ onSort, selectedSort, columns, data, children }) => {
   );
 };
 
-Table.porpTypes = {
+Table.propTypes = {
   onSort: PropTypes.func,
   selectedSort: PropTypes.object,
   columns: PropTypes.object,
