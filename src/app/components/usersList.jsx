@@ -7,7 +7,6 @@ import _ from "lodash";
 import GroupList from "./groupList";
 import API from "../API";
 import SearchStatus from "./seachStatus";
-import TextField from "./textField";
 
 const UsersList = () => {
   // currentPage - срез пользователей котрых хотим отобразить(или текущая страница) и в useState указываем 1 страницу по умолчанию
@@ -19,7 +18,7 @@ const UsersList = () => {
   const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
   const pageSize = 8; // кол-во user на странице
   const [users, setUsers] = useState();
-  const [valueSearch, setValueSearch] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   useEffect(() => {
     API.users.fetchAll().then((data) => setUsers(data));
   }, [users]);
@@ -41,6 +40,7 @@ const UsersList = () => {
   };
   // отслеживает нажатие меню профессий
   const handleProfessionsSelect = (item) => {
+    if (searchQuery !== "") setSearchQuery("");
     setSelectedProf(item);
   };
   // хук который вызывается каждый раз когда мы монтируем что-то в DOM(т.е когда компонент появляется,
@@ -52,7 +52,7 @@ const UsersList = () => {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [selectedProf]);
+  }, [selectedProf, searchQuery]);
 
   // метод сортировки
   const handleOnSort = (item) => {
@@ -60,10 +60,11 @@ const UsersList = () => {
   };
   if (users) {
     // фильтрация
-    const filteredUsers = valueSearch
-      ? users.filter((user) => {
-          return user.name.toLowerCase().includes(valueSearch.toLowerCase());
-        })
+    const filteredUsers = searchQuery
+      ? users.filter(
+          (user) =>
+            user.name.toLowerCase().indexOf(searchQuery.toLowerCase()) !== -1
+        )
       : selectedProf
       ? users.filter(
           (user) =>
@@ -82,8 +83,9 @@ const UsersList = () => {
     const clearFilter = () => {
       setSelectedProf();
     };
-    const handleSearch = ({ target }) => {
-      setValueSearch(target.value);
+    const handleSearchQuery = ({ target }) => {
+      setSelectedProf(undefined);
+      setSearchQuery(target.value);
     };
     return (
       <div className="d-flex">
@@ -101,12 +103,12 @@ const UsersList = () => {
         )}
         <div className="d-flex flex-column">
           <SearchStatus length={count} />
-          <TextField
-            label="Search..."
-            type="search"
-            name="Search"
-            value={valueSearch}
-            onChange={handleSearch}
+          <input
+            type="text"
+            name="searchQuery"
+            placeholder="Search..."
+            onChange={handleSearchQuery}
+            value={searchQuery}
           />
           {count > 0 && (
             <UserTable
