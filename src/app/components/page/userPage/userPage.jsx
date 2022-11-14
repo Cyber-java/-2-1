@@ -6,12 +6,14 @@ import PropTypes from "prop-types";
 
 const UserPage = ({ userId }) => {
   const history = useHistory();
+
   const [user, setUser] = useState();
+
   useEffect(() => {
     API.users.getById(userId).then((data) => setUser(data));
   }, []);
   const handleClick = () => {
-    history.push("/users");
+    history.push(`/users/${userId}/edit`);
   };
   if (user) {
     return (
@@ -21,7 +23,14 @@ const UserPage = ({ userId }) => {
         <Qualities qualities={user.qualities} />
         <p>completedMeetings: {user.completedMeetings} </p>
         <h2>rate:{user.rate}</h2>
-        <button onClick={handleClick}>Все пользователи</button>
+
+        <button
+          onClick={() => {
+            handleClick();
+          }}
+        >
+          Изменить
+        </button>
       </div>
     );
   } else {
