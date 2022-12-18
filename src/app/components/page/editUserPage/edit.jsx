@@ -55,11 +55,6 @@ const Edit = () => {
         qualities: getQualities(qualities),
       })
       .then((data) => history.push(`/users/${data._id}`));
-    console.log({
-      ...data,
-      profession: getProfessionById(profession),
-      qualities: getQualities(qualities),
-    });
   };
   const transformData = (data) => {
     return data.map((qual) => ({ label: qual.name, value: qual._id }));
@@ -124,7 +119,7 @@ const Edit = () => {
     return Object.keys(errors).length === 0;
   };
   const isValid = Object.keys(errors).length === 0;
-  console.log(professions);
+
   return (
     <div className="container mt-5">
       <div className="row">
